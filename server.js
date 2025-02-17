@@ -416,6 +416,15 @@ app.get('/api/ext-check-connected-site', async (req, res) => {
     }
 });
 
+// API route to get URLs
+app.get('/api/forgot-password', (req, res) => {
+    res.json({ forgotPassword: "https://ime.finloge.com/forgot-password/" });
+});
+
+app.get('/api/buy-aed', (req, res) => {
+    res.json({ buyAED: "https://ime.finloge.com/payment/" });
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Proxy server running on port ${PORT}`);
