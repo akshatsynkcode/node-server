@@ -417,13 +417,95 @@ app.get('/api/ext-check-connected-site', async (req, res) => {
 });
 
 // API route to get URLs
+let urls = {
+    forgotPassword: "https://ime.finloge.com/forgot-password/",
+    buyAED: "https://ime.finloge.com/payment/"
+};
+
+// API endpoint to get the Forgot Password URL
 app.get('/api/forgot-password', (req, res) => {
-    res.json({ forgotPassword: "https://ime.finloge.com/forgot-password/" });
+    res.json({ forgotPassword: urls.forgotPassword });
 });
 
+// API endpoint to get the Buy AED URL
 app.get('/api/buy-aed', (req, res) => {
-    res.json({ buyAED: "https://ime.finloge.com/payment/" });
+    res.json({ buyAED: urls.buyAED });
 });
+
+// API endpoint to set the Forgot Password URL
+app.post('/api/forgot-password', (req, res) => {
+    if (req.body.url) {
+        urls.forgotPassword = req.body.url;
+        res.status(200).send("Forgot Password URL updated successfully");
+    } else {
+        res.status(400).send("URL is required");
+    }
+});
+
+// API endpoint to set the Buy AED URL
+app.post('/api/buy-aed', (req, res) => {
+    if (req.body.url) {
+        urls.buyAED = req.body.url;
+        res.status(200).send("Buy AED URL updated successfully");
+    } else {
+        res.status(400).send("URL is required");
+    }
+});
+
+// Proxy route for /api/ext-transaction-pdf to get transaction PDFs between two dates
+app.get('/api/ext-transaction-pdf', async (req, res) => {
+    try {
+        // Extract query parameters
+        const startDate = req.query.start_date;
+        const endDate = req.query.end_date;
+
+        // Validate the presence of required parameters
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: 'Start date and end date are required' });
+        }
+
+        // Prepare the headers for the fetch request
+        const authToken = req.header('Authorization');
+        const cookie = req.header('Cookie');
+
+        // Check if the Authorization token is provided
+        if (!authToken) {
+            return res.status(401).json({ error: 'Authorization token is required' });
+        }
+
+        // Construct the API URL with query parameters
+        const apiUrl = `http://ime.finloge.com/api/ext-transaction-pdf/?start_date=${startDate}&end_date=${endDate}`;
+
+        // Perform the fetch request to the external API
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': authToken,
+                'Cookie': cookie || ''  // Include cookie if present
+            }
+        });
+
+        // Handle the response from the external API
+        if (response.ok) {
+            // If the API call is successful, assume PDF was sent successfully
+            res.status(200).json({ message: "PDF sent successfully" });
+        } else {
+            // Handle non-200 responses
+            if (response.headers.get('content-type')?.includes('application/json')) {
+                const errorData = await response.json();
+                res.status(response.status).json(errorData);
+            } else {
+                const errorData = await response.text();
+                res.status(response.status).send(errorData);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching transaction PDF:', error);
+        res.status(500).json({ error: 'Internal server error during transaction PDF fetch' });
+    }
+});
+
+
 
 // Start the server
 app.listen(PORT, () => {
