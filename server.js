@@ -161,9 +161,9 @@ app.get('/api/ext-transaction', async (req, res) => {
         const startDate = req.query.start_date || ''; // Optional start date
         const endDate = req.query.end_date || ''; // Optional end date
         const pageCount = req.query.page_count || ''; // Optional total pages
-
+        const statusfilter = req.query.status_filter || '';
         // Construct API URL with query parameters
-        const apiUrl = `https://ime.finloge.com/api/ext-transaction?page=${page}&page_size=${pageSize}&page_count=${pageCount}&start_date=${startDate}&end_date=${endDate}`;
+        const apiUrl = `https://ime.finloge.com/api/ext-transaction?page=${page}&page_size=${pageSize}&page_count=${pageCount}&start_date=${startDate}&end_date=${endDate}&status_filter=${statusfilter}`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',
