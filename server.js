@@ -505,6 +505,48 @@ app.get('/api/ext-transaction-pdf', async (req, res) => {
     }
 });
 
+// Proxy route for /send-message-email to forward the email request
+app.post('/api/send-message-email', async (req, res) => {
+    try {
+        const authToken = req.header('Authorization');
+        const csrfToken = req.header('Cookie');
+        if (!authToken || !csrfToken) {
+            return res.status(401).json({ error: 'Authorization token and CSRF token are required' });
+        }
+
+        // Extract the message from the request body
+        const { message } = req.body;
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
+        }
+
+        const response = await fetch('http://ime.finloge.com/api/send-message-email/', {
+            method: 'POST',
+            headers: {
+                'Authorization': authToken,
+                'Content-Type': 'application/json',
+                'Cookie': csrfToken
+            },
+            body: JSON.stringify({ message }) // Sending the message as a JSON body
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            res.status(200).json(data);
+        } else {
+            if (response.headers.get('content-type')?.includes('application/json')) {
+                const errorData = await response.json();
+                res.status(response.status).json(errorData);
+            } else {
+                const errorData = await response.text();
+                res.status(response.status).send(errorData);
+            }
+        }
+    } catch (error) {
+        console.error('Error sending message email:', error);
+        res.status(500).json({ error: 'Internal server error during sending message email' });
+    }
+});
 
 
 // Start the server
