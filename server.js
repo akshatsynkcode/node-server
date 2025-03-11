@@ -508,10 +508,10 @@ app.get('/api/ext-transaction-pdf', async (req, res) => {
 // Proxy route for /send-message-email to forward the email request
 app.post('/api/send-message-email', async (req, res) => {
     try {
+        // Only check for the Authorization token (Bearer token)
         const authToken = req.header('Authorization');
-        const csrfToken = req.header('Cookie');
-        if (!authToken || !csrfToken) {
-            return res.status(401).json({ error: 'Authorization token and CSRF token are required' });
+        if (!authToken) {
+            return res.status(401).json({ error: 'Authorization token is required' });
         }
 
         // Extract the message from the request body
@@ -520,16 +520,17 @@ app.post('/api/send-message-email', async (req, res) => {
             return res.status(400).json({ error: 'Message is required' });
         }
 
+        // Send the message to the external API
         const response = await fetch('http://ime.finloge.com/api/send-message-email/', {
             method: 'POST',
             headers: {
                 'Authorization': authToken,
                 'Content-Type': 'application/json',
-                'Cookie': csrfToken
             },
-            body: JSON.stringify({ message }) // Sending the message as a JSON body
+            body: JSON.stringify({ message }) // Send the message as JSON body
         });
 
+        // Handle the response from the external API
         if (response.ok) {
             const data = await response.json();
             res.status(200).json(data);
@@ -547,6 +548,7 @@ app.post('/api/send-message-email', async (req, res) => {
         res.status(500).json({ error: 'Internal server error during sending message email' });
     }
 });
+
 
 
 // Start the server
