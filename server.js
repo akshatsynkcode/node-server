@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 // Proxy route for /ext-login
 app.post('/api/ext-login', async (req, res) => {
     try {
-        const response = await fetch('https://ime.finloge.com/api/ext-login', {
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -51,7 +51,7 @@ app.get('/api/ext-balance', async (req, res) => {
             return res.status(401).json({ error: 'Authorization token is required' });
         }
 
-        const response = await fetch('https://ime.finloge.com/api/ext-balance', {
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-balance', {
             method: 'GET',
             headers: {
                 'Authorization': authToken
@@ -85,7 +85,7 @@ app.get('/api/ext-profile', async (req, res) => {
             return res.status(401).json({ error: 'Authorization token is required' });
         }
 
-        const response = await fetch('https://ime.finloge.com/api/ext-profile', {
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-profile', {
             method: 'GET',
             headers: {
                 'Authorization': authToken
@@ -122,7 +122,7 @@ app.get('/api/ext-logout', async (req, res) => {
             return res.status(401).json({ error: 'Authorization token is required' });
         }
 
-        const response = await fetch('https://ime.finloge.com/api/ext-logout', {
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-logout', {
             method: 'GET',
             headers: {
                 'Authorization': authToken
@@ -163,7 +163,7 @@ app.get('/api/ext-transaction', async (req, res) => {
         const pageCount = req.query.page_count || ''; // Optional total pages
         const statusfilter = req.query.status_filter || '';
         // Construct API URL with query parameters
-        const apiUrl = `https://ime.finloge.com/api/ext-transaction?page=${page}&page_size=${pageSize}&page_count=${pageCount}&start_date=${startDate}&end_date=${endDate}&status_filter=${statusfilter}`;
+        const apiUrl = `https://ime.dubaicustoms.network/api/ext-transaction?page=${page}&page_size=${pageSize}&page_count=${pageCount}&start_date=${startDate}&end_date=${endDate}&status_filter=${statusfilter}`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -199,7 +199,7 @@ app.put('/api/ext-transaction', async (req, res) => {
             return res.status(401).json({ error: 'Authorization token is required' });
         }
 
-        const response = await fetch('https://ime.finloge.com/api/ext-transaction', {
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-transaction', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -254,8 +254,8 @@ app.put('/api/ext-profile', async (req, res) => {
             body: JSON.stringify(req.body) 
         };
 
-        console.log('Sending request to external API:', 'https://ime.finloge.com/api/ext-profile');
-        const response = await fetch('https://ime.finloge.com/api/ext-profile', options);
+        console.log('Sending request to external API:', 'https://ime.dubaicustoms.network/api/ext-profile');
+        const response = await fetch('https://ime.dubaicustoms.network/api/ext-profile', options);
 
         // Handle the response based on its success
         if (response.ok) {
@@ -296,7 +296,7 @@ app.get('/api/ext-transaction-count', async (req, res) => {
         const filterQuery = 'count'; // As specified in your curl command to always use 'count'
 
         // Construct the full API URL with the query parameter
-        const apiUrl = `https://ime.finloge.com/api/ext-transaction?filter=${filterQuery}`;
+        const apiUrl = `https://ime.dubaicustoms.network/api/ext-transaction?filter=${filterQuery}`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -335,7 +335,7 @@ app.get('/api/ext-check-auth', async (req, res) => {
         const email = encodeURIComponent(req.query.email);
 
         // Construct the URL with query parameters
-        const apiUrl = `https://ime.finloge.com/api/ext-check-auth?email=${email}`;
+        const apiUrl = `https://ime.dubaicustoms.network/api/ext-check-auth?email=${email}`;
 
         // Retrieve the cookie from the incoming request's headers, if available
         const cookie = req.headers['cookie'];
@@ -387,7 +387,7 @@ app.get('/api/ext-check-connected-site', async (req, res) => {
     }
 
     try {
-        const apiUrl = `https://ime.finloge.com/api/ext-check-connected-site?domain=${domain}`;
+        const apiUrl = `https://ime.dubaicustoms.network/api/ext-check-connected-site?domain=${domain}`;
 
         const response = await fetch(apiUrl, {
             method: 'GET',
@@ -418,8 +418,8 @@ app.get('/api/ext-check-connected-site', async (req, res) => {
 
 // API route to get URLs
 let urls = {
-    forgotPassword: "https://ime.finloge.com/forgot-password/",
-    buyAED: "https://ime.finloge.com/payment/"
+    forgotPassword: "https://ime.dubaicustoms.network/forgot-password/",
+    buyAED: "https://ime.dubaicustoms.network/payment/"
 };
 
 // API endpoint to get the Forgot Password URL
